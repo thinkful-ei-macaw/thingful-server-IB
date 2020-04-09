@@ -253,6 +253,7 @@ function seedThingsTables(db, users, things, reviews = []) {
   return db.transaction(async (trx) => {
     await seedUsers(trx, users);
     await trx.into("thingful_things").insert(things);
+    await trx.into("thingful_reviews").insert(reviews);
     await trx.raw(`SELECT setval('thingful_things_id_seq' , ?)`, [
       things[things.length - 1].id,
     ]);
