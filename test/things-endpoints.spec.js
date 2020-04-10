@@ -27,7 +27,7 @@ describe("Things Endpoints", function () {
   before("cleanup", () => helpers.cleanTables(db));
 
   afterEach("cleanup", () => helpers.cleanTables(db));
-  describe.only("Protected endpoints", () => {
+  describe("Protected endpoints", () => {
     beforeEach("insert Things", () =>
       helpers.seedThingsTables(db, testUsers, testThings, testReviews)
     );
@@ -62,26 +62,23 @@ describe("Things Endpoints", function () {
             .expect(401, { error: "Unauthorized request" });
         });
 
-        it.skip("responds 401 'Unauthorized request' when invalid user", () => {
-          const userInvalidCreds = {
-            user_name: "user-not",
-            password: "existy",
-          };
+        it("responds 401 'Unauthorized request' when invalid payload", () => {
+          const invalidUser = { user_name: "user-not-existy", id: 1 };
           return supertest(app)
             .get(endpoint.path)
-            .set("Authorization", helpers.makeAuthHeader(userInvalidCreds))
+            .set("Authorization", helpers.makeAuthHeader(invalidUser))
             .expect(401, { error: "Unauthorized request" });
         });
-        it.skip(`responds 401 'Unauthorized request' when invalid password`, () => {
-          const userInvalidPass = {
-            user_name: testUsers[0].user_name,
-            password: "wrong",
-          };
-          return supertest(app)
-            .get(endpoint.path)
-            .set("Authorization", helpers.makeAuthHeader(userInvalidPass))
-            .expect(401, { error: `Unauthorized request` });
-        });
+        // it.skip(`responds 401 'Unauthorized request' when invalid password`, () => {
+        //   const userInvalidPass = {
+        //     user_name: testUsers[0].user_name,
+        //     password: "wrong",
+        //   };
+        //   return supertest(app)
+        //     .get(endpoint.path)
+        //     .set("Authorization", helpers.makeAuthHeader(userInvalidPass))
+        //     .expect(401, { error: `Unauthorized request` });
+        // });
       });
     });
   });
